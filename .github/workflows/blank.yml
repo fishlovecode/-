@@ -1,0 +1,45 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+
+//插值基函数
+double Lx(double x, const std::vector<double>& xi, int n, int j) {
+	// x为插值函数的因变量x,xi为插值基函数分子的Xk
+	double numerator = 1.0; double denominator = 1.0;
+	for (int i = 0; i <= n-1; i++) {
+		if (i != j) {
+			numerator *= (x - xi[i]);
+			denominator *= (xi[j] - xi[i]);
+		}
+	}
+	return numerator / denominator;
+}
+
+//拉格朗日插值过程
+double lagrange(const vector<double>& x, const vector<double>& y, int n, double xi) {
+	double result = 0.0;
+	for (int j = 0; j < n; j++) {
+		double f1 = Lx(xi,x,n, j);
+		result += y[j] * f1;
+	}
+	return result;
+}
+
+int main() {
+	int n;
+	cout << "输入数据点的个数:\n";   
+	cin >> n;                        //输入数据点的个数
+	vector<double> x(n);
+	vector<double> y(n);//定义节点的横纵坐标
+	cout << "请在每行输入节点坐标，以空格区分:\n";
+	for (int i=0; i<n; i++){
+		cin >> x[i];
+		cin >> y[i];
+	}                                   //输入横纵坐标
+	double xi;
+	cout << "输入插值点的横坐标:\n";   //插值点输入
+	cin >> xi;
+	double yi = lagrange(x, y, n, xi);
+	cout << "插值结果是：" << yi <<endl;	
+	return 0;
+}
